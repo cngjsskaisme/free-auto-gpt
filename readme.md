@@ -1,4 +1,4 @@
-# Local-GPT
+# Free-Auto-GPT
 ## Auto-GPT for everyone
 I'm newbie programmer, but I wanted to use Auto-GPT in every GPT.
 My Goal is to write a library that is:

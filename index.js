@@ -1,9 +1,90 @@
+const getJsonObjectFromString = (str) => {
+  const jsonStart = str.indexOf('{');
+  const jsonEnd = str.lastIndexOf('}') + 1;
+  const jsonString = str.slice(jsonStart, jsonEnd);
+
+  try {
+    const jsonObj = JSON.parse(jsonString);
+    return jsonObj;
+  } catch (error) {
+    throw new Error('Invalid JSON string:', error);
+  }
+}
+
 const agent = () => {
+  /**
+    Sample JSON Request Body:
+    {
+      "model": "gpt-4.0-turbo",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are a helpful assistant."
+        },
+        {
+          "role": "user",
+          "content": "Who won the world series in 2020?"
+        }
+      ]
+    }
+
+    Sample JSON Response Body:
+    {
+      "id": "chatcmpl-3Km9XYPYSTTRi0xEviKjjilqr2U2e",
+      "object": "chat.completion",
+      "created": 1654789230,
+      "model": "gpt-4.0-turbo",
+      "usage": {
+        "prompt_tokens": 56,
+        "completion_tokens": 31,
+        "total_tokens": 87
+      },
+      "choices": [
+        {
+          "message": {
+            "role": "system",
+            "content": "You are a helpful assistant."
+          },
+          "finish_reason": "stop",
+          "index": 0
+        },
+        {
+          "message": {
+            "role": "user",
+            "content": "Who won the world series in 2020?"
+          },
+          "finish_reason": "stop",
+          "index": 1
+        },
+        {
+          "message": {
+            "role": "assistant",
+            "content": "The Los Angeles Dodgers won the World Series in 2020."
+          },
+          "finish_reason": "stop",
+          "index": 2
+        }
+      ]
+    }
+
+   */
   return {
-    prompt: async () => {
-      
+    prompt: async (message) => {
+      const targetEndpoint = "";
+      const result = await fetch("http://localhost:3000/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(req.body)
+      });
+      return await result.json();
     }
   }
+}
+
+const embedding_function = (value) => {
+  return;
 }
 
 const goal_achieved = () => {
@@ -60,13 +141,6 @@ const main = () => {
     
     // Initialize a vector database object
     let vector_db = new VectorDatabase();
-    
-    // Define the embedding function as a function that takes a string value and returns an embedding
-    function embedding_function(value) {
-      // Use the OpenAI ada-002 embeddings API to convert the value into an embedding
-      let embedding = openai.embeddings(value);
-      return embedding;
-    }
     
     // Define the similarity function as a function that takes a query embedding and returns the top-K most similar items from the vector database
     function similarity_function(query_embedding) {

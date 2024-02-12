@@ -49,8 +49,10 @@ const prompts = {
   assessUseTool: (availableTools, subtask) => `
   Please tell the following subtask is need to use tool in the following tools list.
   Available Tools with function signature : ${JSON.stringify(availableTools)}
-  Subtask : ${subtask} 
-  If so, then return the appropriate tool with parameter.
+  Subtask : "${subtask}"
+  If so, then return the result with the following json format in a codeblock.
+  And also, if it is not neccesary, then just make shouldUse: false, and empty code signature.
+  { shouldUse: boolean, codeSignature: "It should be string with code signature with following parameters."}
   `,
   assessAchieved: (result, goal) => `
   ${result}

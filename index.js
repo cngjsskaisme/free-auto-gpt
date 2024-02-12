@@ -1,9 +1,17 @@
+const agent = () => {
+  return {
+    prompt: async () => {
+      
+    }
+  }
+}
+
 const goal_achieved = () => {
 
 }
 
 const sub_tasks_empty = () => {
-  
+  return sub_tasks.length === 0;
 }
 
 const generate_sub_tasks = () => {
@@ -24,6 +32,17 @@ const sub_task_requires_tool = () => {
 
 const find_tool = () => {
   
+}
+
+const VectorDatabase = () => {
+  return {
+    knn_search: () => {
+      return;
+    },
+    store: () => {
+      return;
+    }
+  }
 }
 
 const main = () => {

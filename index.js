@@ -1,3 +1,5 @@
+const prompts = require("./prompts")
+
 const getJsonObjectFromString = (str) => {
   const jsonStart = str.indexOf('{');
   const jsonEnd = str.lastIndexOf('}') + 1;
@@ -87,8 +89,8 @@ const embedding_function = (value) => {
   return;
 }
 
-const goal_achieved = () => {
-
+const goal_achieved = async (agentInstance, result, goal) => {
+  await agentInstance.prompt(prompts.assessAchieved())
 }
 
 const sub_tasks_empty = () => {

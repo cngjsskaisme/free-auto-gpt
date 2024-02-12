@@ -65,6 +65,4 @@ const prompts = {
   `
 }
 
-export {
-  prompts
-}
+module.exports = prompts;

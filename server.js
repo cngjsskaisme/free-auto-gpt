@@ -1,8 +1,7 @@
 const express = require('express');
 const app = express();
 const port = 3000;
-const getWrtnAgent = require('./getWrtnAgent');
-const wrtnCookieInfo = require('./wrtnCookieInfo');
+const getWrtnAgent = require('./gptAgents/tests/index');
 const https = require('https');
 const fs = require("fs");
 const promisedFs = require('node:fs/promises');
@@ -11,13 +10,13 @@ const morgan = require('morgan');
 const _ = require("lodash");
 
 (async () => {
-  // const wrtnAgent = await getWrtnAgent({
-  //   // useCookie: wrtnCookieInfo,
-  //   credential: {
-  //     id: 'tlw2401@www.gmail.com.lal.kr',
-  //     pw: 'hello!!Kitty32'
-  //   }
-  // })
+  const wrtnAgent = await getWrtnAgent({
+    // useCookie: wrtnCookieInfo,
+    credential: {
+      id: 'tlw2401@www.gmail.com.lal.kr',
+      pw: 'hello!!Kitty32'
+    }
+  })
 
   // {
   //   "model": "gpt-3.5-turbo",
@@ -32,33 +31,40 @@ const _ = require("lodash");
   // Define the endpoints you want to exclude
   const excludedEndpoints = ['/v1/chat/completions', '/v1/embeddings'];
   
+  // app.post('/v1/chat/completions', async (req, res) => {
+  //   // const textResponse = await wrtnAgent.chatCompletion(req.body.messages)
+  //   let log = JSON.stringify(req.body, null, 2)
+
+  //   console.log("//////////////////////////////////////////////")
+  //   console.log(JSON.stringify(req.body, null, 2))
+  //   console.log("//////////////////////////////////////////////")
+    
+  //   var fetchedResult = await fetch("http://localhost:3000/v1/chat/completions", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(req.body)
+  //   })
+
+  //   const responseJson = await fetchedResult.json()
+  //   responseJson.model = req.body.model
+
+  //   console.log("//////////////////////////////////////////////")
+  //   console.log(JSON.stringify(responseJson, null, 2))
+  //   console.log("//////////////////////////////////////////////")
+    
+  //   log +=  "\n\n" + JSON.stringify(responseJson, null, 2) + "\n\n==========================================================\n\n"
+  //   await promisedFs.appendFile("./output.completions.txt", log)
+    
+  //   res.json(responseJson)
+  // });
+
   app.post('/v1/chat/completions', async (req, res) => {
-    // const textResponse = await wrtnAgent.chatCompletion(req.body.messages)
-    let log = JSON.stringify(req.body, null, 2)
-
-    console.log("//////////////////////////////////////////////")
-    console.log(JSON.stringify(req.body, null, 2))
-    console.log("//////////////////////////////////////////////")
-    
-    var fetchedResult = await fetch("http://localhost:3000/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(req.body)
+    const textResponse = await wrtnAgent.chatCompletion(req.body.messages)
+    res.json({
+      textResponse
     })
-
-    const responseJson = await fetchedResult.json()
-    responseJson.model = req.body.model
-
-    console.log("//////////////////////////////////////////////")
-    console.log(JSON.stringify(responseJson, null, 2))
-    console.log("//////////////////////////////////////////////")
-    
-    log +=  "\n\n" + JSON.stringify(responseJson, null, 2) + "\n\n==========================================================\n\n"
-    await promisedFs.appendFile("./output.completions.txt", log)
-    
-    res.json(responseJson)
   });
 
   app.post('/v1/embeddings', async (req, res) => {
@@ -113,12 +119,15 @@ const _ = require("lodash");
     changeOrigin: false,
   }));
 
-  const httpsOptions = {
-    key: fs.readFileSync('./keyfile.pem'),
-    cert: fs.readFileSync('./certfile.crt'),
-  }
+  // const httpsOptions = {
+  //   key: fs.readFileSync('./keyfile.pem'),
+  //   cert: fs.readFileSync('./certfile.crt'),
+  // }
 
-  https.createServer(httpsOptions, app).listen(443, () => {
-    console.log('HTTPS Server running on port 443');
+  // https.createServer(httpsOptions, app).listen(443, () => {
+  //   console.log('HTTPS Server running on port 443');
+  // });
+  app.listen(port, () => {
+    console.log(`App listening at http://localhost:${port}`);
   });
 })()
